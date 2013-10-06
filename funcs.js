@@ -35,9 +35,10 @@ function getRaitings() {
             $("#x").html("x: " + msg.coords.longitude);
             $("#y").html("y: " + msg.coords.latitude);
 
-            $("#nearest").html("<h4>По близости:</h4>");
+            $("#nearest").html("<h3>По близости:</h3>");
             for(key in msg.nearest){
-                dst = Math.round(100*parseInt(msg.nearest[key]))/100;
+                dst = Math.round(100*parseInt(msg.nearest[key]))/100/0.5;
+                dst *= 0.5;
                 $("#nearest").html($("#nearest").html() + key + ': ' + dst + ' км<br>');
             }
 
@@ -100,7 +101,7 @@ function initMap(x,y){
             point = [];
             rts = [];
             dx = 0.03;
-            dy = 0.03;
+            dy = 0.03;/*
             for(i=0; i< pts.length; i++){
                 point = pts[i];
                 myPolygon = new ymaps.Polygon([
@@ -130,17 +131,17 @@ function initMap(x,y){
                     mmap.geoObjects.add(myPolygon);
 
 
-            }
+            }*/
             point = msg.points[0];
             point.x = parseFloat(point.x);
             point.y = parseFloat(point.y);
-            rts[0] = new ymaps.Polygon([
-                    [point.x-dx,point.y-dy],
-                    [point.x-dx,point.y+dy],
-                    [point.x+dx,point.y+dy],
-                    [point.x+dx,point.y-dy]
+            pol = new ymaps.Polygon([
+                    [55,38],
+                    [56,38],
+                    [56,37],
+                    [55,37]
                 ]);
-            mmap.geoObjects.add(rts[0]);
+            mmap.geoObjects.add(pol);
 
         },
         error: function(jqXHR, textStatus, errorThrown ) {

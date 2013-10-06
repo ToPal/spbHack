@@ -86,8 +86,6 @@
                 </div>
 
                 <div id="desc">
-                    Школа 640м
-                    Метро 1,5%
                     <div id = "socialRaiting"></div>
                     <div id = "infrastructureRaiting"></div>
                     <div id = "recreationRaiting"></div>
@@ -111,7 +109,8 @@
         change : function(){ set_sl_val($(this),"scools_percent"); },
         create : function(){ set_sl_val($(this),"scools_percent"); },
         min : 0,
-        max : 100
+        max : 100,
+        value: 50
     });
 
     $("#metro_slider").slider({
