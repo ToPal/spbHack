@@ -15,7 +15,7 @@
     <link href="bootstrap/dist/css/bootstrap.css" rel="stylesheet">
     <script type="text/javascript" src="funcs.js"></script>
 
-    <script src="http://api-maps.yandex.ru/2.0-stable/?load=package.standard,package.geoObject&lang=ru-RU" type="text/javascript"></script>
+    <script src="http://api-maps.yandex.ru/2.0-stable/?load=package.full&lang=ru-RU" type="text/javascript"></script>
 
     <title>Городские зоны комфорта</title>
 

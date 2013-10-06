@@ -96,7 +96,52 @@ function initMap(x,y){
                 return;
             }
             
-            points = msg;
+            pts = msg.points;
+            point = [];
+            rts = [];
+            dx = 0.03;
+            dy = 0.03;
+            for(i=0; i< pts.length; i++){
+                point = pts[i];
+                myPolygon = new ymaps.Polygon([
+                            // Координаты вершин внешней границы многоугольника.
+                    [
+                    [point.x-dx,point.y-dy],
+                    [point.x+dx,point.y-dy],
+                    [point.x+dx,point.y+dy],
+                    [point.x-dx,point.y+dy]
+                    ]
+                        ], {
+                            //Свойства
+                            hintContent: "Многоугольник"
+                        }, {
+                            // Опции.
+                            // Цвет заливки (красный)
+                            fillColor: '#FF0000',
+                            // Цвет границ (синий)
+                            strokeColor: '#0000FF',
+                            // Прозрачность (полупрозрачная заливка)
+                            opacity: 0.6,
+                            // Ширина линии
+                            strokeWidth: 5,
+                            // Стиль линии
+                            strokeStyle: 'shortdash'
+                        });
+                    mmap.geoObjects.add(myPolygon);
+
+
+            }
+            point = msg.points[0];
+            point.x = parseFloat(point.x);
+            point.y = parseFloat(point.y);
+            rts[0] = new ymaps.Polygon([
+                    [point.x-dx,point.y-dy],
+                    [point.x-dx,point.y+dy],
+                    [point.x+dx,point.y+dy],
+                    [point.x+dx,point.y-dy]
+                ]);
+            mmap.geoObjects.add(rts[0]);
+
         },
         error: function(jqXHR, textStatus, errorThrown ) {
             setStatus("Возникла ошибка. Обратитесь, пожалуйста, к разработчику.");
