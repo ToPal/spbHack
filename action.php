@@ -1,6 +1,6 @@
 <?php
 
-include_once("main_funcs.php");
+include_once("php/main_funcs.php");
 
 // available functions names
 define("getRaitingByAddress", "getRaitingByAddress");
@@ -8,6 +8,7 @@ define("getRaitingImage", "getRaitingImage");
 define("getPoints", "getPoints");
 
 $res = array();
+$func = "";
 
 try {
     if (!isset($_POST["func"])) {

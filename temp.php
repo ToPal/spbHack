@@ -1,7 +1,7 @@
 <?php
-    include_once('DatasetsRaitings.php');
-    include_once('Raitings.php');
-    include_once('main_funcs.php');
+    include_once('php/DatasetsRaitings.php');
+    include_once('php/Raitings.php');
+    include_once('php/main_funcs.php');
 
 //    $location['latitude'] = 37.735268;
 //    $location['longitude'] = 55.693351;
