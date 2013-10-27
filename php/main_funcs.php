@@ -53,3 +53,25 @@ function func_getPoints() {
     $res['points'] = getPointsForMap();
     return $res;
 }
+
+function func_getPointArrays() {
+    $res = array();
+    define("FuncName", "PointArrays");
+    $pointArrays = array();
+
+    $points = getPointsForMap();
+    $pointArrays['count'] = count($points);
+    if ($pointArrays['count'] == 0) {
+        $res[FuncName] = $pointArrays;
+        return $res;
+    }
+
+    foreach ($points as $num => $point) {
+        foreach ($point as $k => $v) {
+            $res[$k][] = $v;
+        }
+    }
+
+    $res[FuncName] = $pointArrays;
+    return $res;
+}

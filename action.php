@@ -6,6 +6,7 @@ include_once("php/main_funcs.php");
 define("getRaitingByAddress", "getRaitingByAddress");
 define("getRaitingImage", "getRaitingImage");
 define("getPoints", "getPoints");
+define("getPointArrays", "getPointArrays");
 
 $res = array();
 $func = "";
@@ -25,6 +26,7 @@ try {
         case getRaitingByAddress: $res = func_getRaitingByAddress(); break;
         case getRaitingImage: func_generateImg(); break;
         case getPoints: $res = func_getPoints(); break;
+        case getPointArrays: $res = func_getPointArrays(); break;
 
         default: throw new Exception("Неизвестная функция");
     }
