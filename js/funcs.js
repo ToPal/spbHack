@@ -115,6 +115,7 @@ function loadAreas(){
                 ]]);
             mmap.setZoom(zoom);
             mmap.geoObjects.add(pol);
+            /* фыва*/
 
         },
         error: function(jqXHR, textStatus, errorThrown ) {
