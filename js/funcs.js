@@ -92,12 +92,12 @@ function loadAreas(){
         dataType: "json",
         url: "action.php",
         data: {
-            func   : 'getPoints'
+            func   : 'getPointArrays'
         },
         async: true,
         success: function(msg){
             if (msg.result != "success") {
-                setRaiting(msg.errorMessage);
+                alert(msg.errorMessage);
                 return;
             }
             points = msg.points;
@@ -115,7 +115,6 @@ function loadAreas(){
                 ]]);
             mmap.setZoom(zoom);
             mmap.geoObjects.add(pol);
-            /* фыва*/
 
         },
         error: function(jqXHR, textStatus, errorThrown ) {
