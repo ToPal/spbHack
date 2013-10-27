@@ -4,16 +4,16 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
-    <script type="text/javascript" src="jquery-2.0.3.js"></script>
+    <script type="text/javascript" src="js/jquery-2.0.3.js"></script>
     <!-- 1. Подключим библиотеку jQuery (без нее jQuery UI не будет работать) -->
     <!--<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>-->
     <!-- 2. Подключим jQuery UI -->
     <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.1/themes/redmond/jquery-ui.css" rel="stylesheet" type="text/css"/>
     <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
 
-    <script src="bootstrap/dist/js/bootstrap.min.js"></script>
-    <link href="bootstrap/dist/css/bootstrap.css" rel="stylesheet">
-    <script type="text/javascript" src="funcs.js"></script>
+    <script src="js/bootstrap/dist/js/bootstrap.min.js"></script>
+    <link href="js/bootstrap/dist/css/bootstrap.css" rel="stylesheet">
+    <script type="text/javascript" src="js/funcs.js"></script>
 
     <script src="http://api-maps.yandex.ru/2.0-stable/?load=package.full&lang=ru-RU" type="text/javascript"></script>
 
@@ -145,7 +145,7 @@
     }
 </script>
 
-<!-- Yandex.Metrika counter -->
+<!-- Yandex.Metrika counter --
 <script type="text/javascript">
 (function (d, w, c) {
     (w[c] = w[c] || []).push(function() {
@@ -170,6 +170,6 @@
 })(document, window, "yandex_metrika_callbacks");
 </script>
 <noscript><div><img src="//mc.yandex.ru/watch/22531141" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
-<!-- /Yandex.Metrika counter -->
+!-- /Yandex.Metrika counter -->
 
 </html>
