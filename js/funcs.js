@@ -27,7 +27,7 @@ function getRaitings() {
             }
             localRaitings = msg.localRaitings;
             setStatus("");
-            $("#mainRaiting").html("Рейтинг: " + msg.raiting);
+            $("#Raiting").html("<b>Рейтинг: " + msg.raiting+",</b>");
             $("#socialRaiting").html("Социальный рейтинг: " + localRaitings.socialRaiting);
             $("#infrastructureRaiting").html("Рекреационный рейтинг: " + localRaitings.recreationRaiting);
             $("#recreationRaiting").html("Инфраструктурный рейтинг: " + localRaitings.infrastructureRaiting);
@@ -37,8 +37,8 @@ function getRaitings() {
 
             $("#nearest").html("<h3>По близости:</h3>");
             for(key in msg.nearest){
-                dst = Math.round(100*parseInt(msg.nearest[key]))/100/0.5;
-                dst *= 0.5;
+                dst = (Math.round(100*msg.nearest[key]))+0.5;
+                dst = (dst-0.5)/100;
                 $("#nearest").html($("#nearest").html() + key + ': ' + dst + ' км<br>');
             }
 
@@ -82,6 +82,11 @@ function initMap(x,y){
     });
     mmap.geoObjects.add(placemark); 
 
+    loadAreas();
+
+}
+function loadAreas(){
+
     $.ajax({
         type: "POST",
         dataType: "json",
@@ -91,56 +96,24 @@ function initMap(x,y){
         },
         async: true,
         success: function(msg){
-            points = msg;
             if (msg.result != "success") {
                 setRaiting(msg.errorMessage);
                 return;
             }
-            
-            pts = msg.points;
-            point = [];
-            rts = [];
-            dx = 0.03;
-            dy = 0.03;/*
-            for(i=0; i< pts.length; i++){
-                point = pts[i];
-                myPolygon = new ymaps.Polygon([
-                            // Координаты вершин внешней границы многоугольника.
-                    [
-                    [point.x-dx,point.y-dy],
-                    [point.x+dx,point.y-dy],
-                    [point.x+dx,point.y+dy],
-                    [point.x-dx,point.y+dy]
-                    ]
-                        ], {
-                            //Свойства
-                            hintContent: "Многоугольник"
-                        }, {
-                            // Опции.
-                            // Цвет заливки (красный)
-                            fillColor: '#FF0000',
-                            // Цвет границ (синий)
-                            strokeColor: '#0000FF',
-                            // Прозрачность (полупрозрачная заливка)
-                            opacity: 0.6,
-                            // Ширина линии
-                            strokeWidth: 5,
-                            // Стиль линии
-                            strokeStyle: 'shortdash'
-                        });
-                    mmap.geoObjects.add(myPolygon);
-
-
-            }*/
-            point = msg.points[0];
-            point.x = parseFloat(point.x);
-            point.y = parseFloat(point.y);
-            pol = new ymaps.Polygon([
-                    [55,38],
-                    [56,38],
-                    [56,37],
-                    [55,37]
-                ]);
+            points = msg.points;
+            x = glob_msg.coords.longitude;
+            y = glob_msg.coords.latitude;
+            dx = 1;
+            dy = 1;
+            zoom = 7;
+            pol = new ymaps.Polygon([[
+                    // Координаты вершин внешней границы многоугольника.
+            [x-dx,y+dy],
+            [x+dx,y+dy],
+            [x+dx,y-dy],
+            [x-dx,y-dy]
+                ]]);
+            mmap.setZoom(zoom);
             mmap.geoObjects.add(pol);
 
         },
@@ -148,5 +121,4 @@ function initMap(x,y){
             setStatus("Возникла ошибка. Обратитесь, пожалуйста, к разработчику.");
         }
     });
-
 }
