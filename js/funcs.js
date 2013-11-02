@@ -70,6 +70,8 @@ function setStatus(status) {
 
 var mmap;
 var points;
+var placemark;
+var pols;
 function initMap(x,y){
     $('#map').html('');
 
@@ -77,22 +79,24 @@ function initMap(x,y){
             center: [x, y], 
             zoom: 16
         });
-    var placemark = new ymaps.Placemark([x, y], {}, {
+    placemark = new ymaps.Placemark([x, y], {}, {
         preset: 'twirl#redIcon' 
     });
     mmap.geoObjects.add(placemark); 
 
-    loadAreas();
+    reloadWarmMap();
+    mmap.behaviors.events.add('dragend', function(){ setTimeout ( function(){reloadWarmMap()}, 500 ) } );
+    mmap.behaviors.events.add('zoomchange', function(){ setTimeout ( function(){reloadWarmMap()}, 500 ) } );
+    //mmap.behaviors.events.add('mouseup', function(){ reloadWarmMap() } );
 
 }
 function loadAreas(){
-
     $.ajax({
         type: "POST",
         dataType: "json",
         url: "action.php",
         data: {
-            func   : 'getPointArrays'
+            func   : 'getPoints'
         },
         async: true,
         success: function(msg){
@@ -101,24 +105,63 @@ function loadAreas(){
                 return;
             }
             points = msg.points;
-            x = glob_msg.coords.longitude;
-            y = glob_msg.coords.latitude;
-            dx = 1;
-            dy = 1;
-            zoom = 7;
-            pol = new ymaps.Polygon([[
-                    // Координаты вершин внешней границы многоугольника.
-            [x-dx,y+dy],
-            [x+dx,y+dy],
-            [x+dx,y-dy],
-            [x-dx,y-dy]
-                ]]);
-            mmap.setZoom(zoom);
-            mmap.geoObjects.add(pol);
-
+            reloadWarmMap();
         },
         error: function(jqXHR, textStatus, errorThrown ) {
             setStatus("Возникла ошибка. Обратитесь, пожалуйста, к разработчику.");
         }
     });
+}
+function reloadWarmMap(){
+    if ( !points ){
+        loadAreas();
+        return;
+    }
+
+
+    bounds = mmap.getBounds();
+
+    k=1;
+    while(points[k].X == points[0].X) k++;
+    dx = Math.abs( (points[k].X - points[0].X) / 2 );
+    k=1;
+    while(points[k].Y == points[0].Y) k++;
+    dy = Math.abs( (points[k].Y - points[0].Y) / 2 );
+    
+    if ( pols ){
+        for (k=0; k< pols.length; k++){
+            mmap.geoObjects.remove( pols[k] );
+        }
+    }
+    i = 1;
+    pols= [];
+    Xes = [];
+    Yes = [];
+    while(points[i]){
+        x   = parseFloat(points[i].X);
+        y   = parseFloat(points[i].Y);
+        if ( x < bounds [0][0]-dx || x > bounds[1][0]+dx || y < bounds[0][1]-dy || y > bounds [1][1]+dy ){
+            i++;
+            continue;
+        }
+        val = points[i][2];
+            
+        pol = new ymaps.Polygon([[
+            [x-dx,y+dy],
+            [x+dx,y+dy],
+            [x+dx,y-dy],
+            [x-dx,y-dy]
+            ]],
+            {
+                hintContent:"Рейтинг: " + val
+            },
+            {
+                strokeWidth: 0.1
+            });
+        pols[pols.length] = pol;
+        Xes[i] = x;
+        Yes[i] = y;
+        mmap.geoObjects.add(pol);
+        i++;
+    }
 }
