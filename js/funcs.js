@@ -72,6 +72,13 @@ var mmap;
 var points;
 var placemark;
 var pols;
+var maxVal;
+var minVal;
+var vLen
+var dVal;
+var dColor;
+var cLen;
+var polColor;
 function initMap(x,y){
     $('#map').html('');
 
@@ -133,6 +140,29 @@ function reloadWarmMap(){
             mmap.geoObjects.remove( pols[k] );
         }
     }
+    
+    RGBPoints = [];
+    RGBPoints[0] = [252, 0,   0];
+    RGBPoints[1] = [252, 247, 0];
+    /*RGBPoints[2] = [0,   247, 0];*/
+    RGBPoints[2] = [0,   218, 26];
+    maxVal = parseFloat(points[0][2]);
+    minVal = parseFloat(points[0][2]);
+    
+    i = 1;
+    while(points[i]){
+        val = parseFloat(points[i][2]);
+        if ( val > maxVal ) maxVal = val;
+        if ( val < minVal ) minVal = val;
+        i++;
+    }
+    nSteps   = 20;
+    vLen     = (maxVal - minVal);
+    dVal     = vLen / nSteps; 
+    cLen     = getLineLength(RGBPoints);
+    dColor   = cLen / nSteps;
+    
+
     i = 1;
     pols= [];
     Xes = [];
@@ -140,12 +170,19 @@ function reloadWarmMap(){
     while(points[i]){
         x   = parseFloat(points[i].X);
         y   = parseFloat(points[i].Y);
+
         if ( x < bounds [0][0]-dx || x > bounds[1][0]+dx || y < bounds[0][1]-dy || y > bounds [1][1]+dy ){
             i++;
             continue;
         }
-        val = points[i][2];
-            
+
+        val      = parseFloat(points[i][2]);
+        cValStep = Math.round((val - minVal) / dVal);
+        ColorX   = dColor * cValStep;
+        cColor   = lineToFunction (RGBPoints,ColorX);
+        //console.log("val="+val + "  cValStep="+cValStep + "  ColorX="+ColorX + "  cColor="+cColor);
+        polColor = "rgb(" + Math.round(cColor[0]) + "," + Math.round(cColor[1]) + "," + Math.round(cColor[2]) + ")";
+      
         pol = new ymaps.Polygon([[
             [x-dx,y+dy],
             [x+dx,y+dy],
@@ -153,10 +190,13 @@ function reloadWarmMap(){
             [x-dx,y-dy]
             ]],
             {
-                hintContent:"Рейтинг: " + val
+                hintContent:"Рейтинг: "+val + "  cValStep="+cValStep + "  ColorX="+ColorX + "  cColor="+cColor
             },
             {
-                strokeWidth: 0.1
+                strokeWidth: 0.1,
+                strokeColor: polColor,
+                fillColor: polColor,
+                opacity:0.7
             });
         pols[pols.length] = pol;
         Xes[i] = x;
@@ -164,4 +204,44 @@ function reloadWarmMap(){
         mmap.geoObjects.add(pol);
         i++;
     }
+}
+
+function getLineLength(line){
+    var lenFull = 0;
+    var lenSeg,i,j;
+    for (i = 1; i < line.length; i++){
+        lenSeg = 0;
+        for (j= 0; j< line[i].length; j++){
+            lenSeg += (line[i][j] - line[i-1][j]) * (line[i][j] - line[i-1][j]);
+        }
+        lenSeg = Math.sqrt(lenSeg);
+        lenFull += lenSeg;
+    }
+    return lenFull;
+}
+function lineToFunction(line,X){
+    var lenFull = 0;
+    var coords = [];
+    var lenSeg,i,j;
+    if (X <= 0)
+        return line[0];
+    if (X >= getLineLength(line))
+        return line[line.length-1];
+    for (i= 1; i< line.length; i++){
+        lenSeg = 0;
+        for (j= 0; j< line[i].length; j++){
+            lenSeg += (line[i][j] - line[i-1][j]) * (line[i][j] - line[i-1][j]);
+        }
+        lenSeg = Math.sqrt(lenSeg);
+        lenFull += lenSeg;
+        if ( X < lenFull ){
+            for (j= 0; j< line[i].length; j++){
+              coords[j] = line[i-1][j]  +  (line[i][j] - line[i-1][j]) / lenSeg   *   (X - lenFull + lenSeg );
+              //console.log("i= " + i + "  coords["+j+"]= " + line[i-1][j] + " + " +  (line[i][j] - line[i-1][j]) + " / " + lenSeg + " * " + "( " + X + " - " +  lenFull + " + " + lenSeg + " )");
+            }
+            return coords;
+        }
+    }
+    if (coords == [])
+        alert("X="+X);
 }
