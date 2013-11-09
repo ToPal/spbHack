@@ -1,6 +1,6 @@
 var glob_msg;
 function getRaitings() {
-    addr = $("#address").val();
+    var addr = $("#address").val();
     scools_percent  = $('#scools_percent').text();
     metro_percent   = $('#metro_percent').text();
     fuel_percent    = $('#fuel_percent').text();
@@ -69,6 +69,7 @@ function setStatus(status) {
 }
 
 var mmap;
+var gmap;
 var points;
 var placemark;
 var pols;
@@ -81,7 +82,7 @@ var cLen;
 var polColor;
 function initMap(x,y){
     $('#map').html('');
-
+  //Загружаем яндокарты
     mmap = new ymaps.Map ("map", {
             center: [x, y], 
             zoom: 16
@@ -89,13 +90,27 @@ function initMap(x,y){
     placemark = new ymaps.Placemark([x, y], {}, {
         preset: 'twirl#redIcon' 
     });
-    mmap.geoObjects.add(placemark); 
+    mmap.geoObjects.add(placemark);
 
+  /*подгружаем гуглокарты*/
+    var gCenter = new google.maps.LatLng(x,y);
+    var gOptions = {
+        zoom: 16,
+        center: gCenter,
+        mapTypeId: google.maps.MapTypeId.ROADMAP
+    };
+    gmap = new google.maps.Map(document.getElementById('g_map'),gOptions);
+    var gMarker = new google.maps.Marker({
+        position: gCenter,
+        map: gmap,
+        tittle: "Hello!"
+    })
+
+  /*подгружаем и рисуем теплокубики*/
     reloadWarmMap();
-    mmap.behaviors.events.add('dragend', function(){ setTimeout ( function(){reloadWarmMap()}, 500 ) } );
-    mmap.behaviors.events.add('zoomchange', function(){ setTimeout ( function(){reloadWarmMap()}, 500 ) } );
-    //mmap.behaviors.events.add('mouseup', function(){ reloadWarmMap() } );
-
+  /*следим чтоб кубики не убегали*/
+    //mmap.behaviors.events.add('dragend', function(){ setTimeout ( function(){reloadWarmMap()}, 500 ) } );
+    //mmap.behaviors.events.add('zoomchange', function(){ setTimeout ( function(){reloadWarmMap()}, 500 ) } );
 }
 function loadAreas(){
     $.ajax({
@@ -119,29 +134,31 @@ function loadAreas(){
         }
     });
 }
+
+
+
+
+var gHeatPoints = [];
+var gHeatMap;
 function reloadWarmMap(){
     if ( !points ){
         loadAreas();
         return;
     }
-
-
-    bounds = mmap.getBounds();
-
-    k=1;
+    var bounds = mmap.getBounds();
+    var k=1;
     while(points[k].X == points[0].X) k++;
-    dx = Math.abs( (points[k].X - points[0].X) / 2 );
-    k=1;
+    var dx = Math.abs( (points[k].X - points[0].X) / 2 );
     while(points[k].Y == points[0].Y) k++;
-    dy = Math.abs( (points[k].Y - points[0].Y) / 2 );
+    var dy = Math.abs( (points[k].Y - points[0].Y) / 2 );
     
     if ( pols ){
         for (k=0; k< pols.length; k++){
             mmap.geoObjects.remove( pols[k] );
         }
     }
-    
-    RGBPoints = [];
+
+    var RGBPoints = [];
     RGBPoints[0] = [252, 0,   0];
     RGBPoints[1] = [252, 247, 0];
     /*RGBPoints[2] = [0,   247, 0];*/
@@ -151,39 +168,43 @@ function reloadWarmMap(){
     
     i = 1;
     while(points[i]){
-        val = parseFloat(points[i][2]);
+        var val = parseFloat(points[i][2]);
         if ( val > maxVal ) maxVal = val;
         if ( val < minVal ) minVal = val;
         i++;
     }
-    nSteps   = 20;
+    var nSteps   = 20;
     vLen     = (maxVal - minVal);
     dVal     = vLen / nSteps; 
     cLen     = getLineLength(RGBPoints);
     dColor   = cLen / nSteps;
-    
 
-    i = 1;
+
+    var i = 1;
     pols= [];
-    Xes = [];
-    Yes = [];
+    var Xes = [];
+    var Yes = [];
+    var ptsum = 0;
+    gHeatPoints = [];
     while(points[i]){
-        x   = parseFloat(points[i].X);
-        y   = parseFloat(points[i].Y);
+        var x   = parseFloat(points[i].X);
+        var y   = parseFloat(points[i].Y);
+
 
         if ( x < bounds [0][0]-dx || x > bounds[1][0]+dx || y < bounds[0][1]-dy || y > bounds [1][1]+dy ){
-            i++;
-            continue;
+            //i++;
+            //continue;
         }
 
+
         val      = parseFloat(points[i][2]);
-        cValStep = Math.round((val - minVal) / dVal);
-        ColorX   = dColor * cValStep;
-        cColor   = lineToFunction (RGBPoints,ColorX);
+        var cValStep = Math.round((val - minVal) / dVal);
+        var ColorX   = dColor * cValStep;
+        var cColor   = lineToFunction (RGBPoints,ColorX);
         //console.log("val="+val + "  cValStep="+cValStep + "  ColorX="+ColorX + "  cColor="+cColor);
         polColor = "rgb(" + Math.round(cColor[0]) + "," + Math.round(cColor[1]) + "," + Math.round(cColor[2]) + ")";
-      
-        pol = new ymaps.Polygon([[
+
+        var pol = new ymaps.Polygon([[
             [x-dx,y+dy],
             [x+dx,y+dy],
             [x+dx,y-dy],
@@ -202,8 +223,41 @@ function reloadWarmMap(){
         Xes[i] = x;
         Yes[i] = y;
         mmap.geoObjects.add(pol);
+
+
+        /*
+        if ( ! (x < bounds [0][0]-dx || x > bounds[1][0]+dx || y < bounds[0][1]-dy || y > bounds [1][1]+dy) ){
+            ptsum += parseFloat(points[i][2]);
+        }
+
+        var gVal = parseFloat(points[i][2]);
+        gHeatPoints[gHeatPoints.length] = {
+            location: new google.maps.LatLng(x,y),
+            weight: gVal
+        };*/
         i++;
+        console.log("i="+i);
+
+    }/*
+    gmap.setZoom(mmap.getZoom());
+    var gHeatOptions = {
+        //radius: 1000 / (Math.pow(19-gmap.getZoom(),1)),
+        dissipating: true,
+        maxIntensity: ptsum
     }
+    if (!gHeatMap){
+        gHeatMap = new google.maps.visualization.HeatmapLayer( {data: gHeatPoints} );
+        gHeatMap.setOptions( gHeatOptions );
+        gHeatMap.setMap( gmap );
+    }
+    else{
+        gHeatMap.setData( gHeatPoints );
+        gHeatMap.setOptions( gHeatOptions );
+    }*/
+
+
+
+
 }
 
 function getLineLength(line){

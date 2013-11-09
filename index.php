@@ -16,6 +16,8 @@
     <script type="text/javascript" src="js/funcs.js"></script>
 
     <script src="http://api-maps.yandex.ru/2.0-stable/?load=package.full&lang=ru-RU" type="text/javascript"></script>
+    <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?libraries=visualization&sensor=false">
+    </script>
 
     <title>Городские зоны комфорта</title>
 
@@ -97,9 +99,8 @@
 
             </div>
 
-            <div id="map" style="float:left; width:800px; height: 600px;">
-                Карта
-            </div>
+            <div id="map"   style="float:left; width:800px; height: 600px;"></div>
+            <div id="g_map" style="float:left; width:800px; height: 600px;"></div>
 
     </div>
 </body>
