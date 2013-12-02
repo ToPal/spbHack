@@ -1,6 +1,6 @@
 <?php
-    include_once('php/DatasetsRaitings.php');
-    include_once('php/Raitings.php');
+    include_once('php/DatasetsRatings.php');
+    include_once('php/Ratings.php');
     include_once('php/main_funcs.php');
 
 //    $location['latitude'] = 37.735268;

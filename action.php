@@ -3,8 +3,8 @@
 include_once("php/main_funcs.php");
 
 // available functions names
-define("getRaitingByAddress", "getRaitingByAddress");
-define("getRaitingImage", "getRaitingImage");
+define("getRatingByAddress", "getRaitingByAddress");
+define("getRatingImage", "getRaitingImage");
 define("getPoints", "getPoints");
 define("getPointArrays", "getPointArrays");
 
@@ -14,17 +14,17 @@ $func = "";
 try {
     if (!isset($_POST["func"])) {
         if (isset($_GET['address'])) {
-            $func = getRaitingImage;
+            $func = getRatingImage;
         } else {
-            $func = getRaitingByAddress;
+            $func = getRatingByAddress;
         }
     } else {
         $func = $_POST["func"];
     }
 
     switch ($func) {
-        case getRaitingByAddress: $res = func_getRaitingByAddress(); break;
-        case getRaitingImage: func_generateImg(); break;
+        case getRatingByAddress: $res = func_getRatingByAddress(); break;
+        case getRatingImage: func_generateImg(); break;
         case getPoints: $res = func_getPoints(); break;
         case getPointArrays: $res = func_getPointArrays(); break;
 
@@ -41,6 +41,6 @@ if (isset($res['errorMessage'])) {
     $res['result'] = 'success';
 }
 
-if (($res['result'] == 'fail') || ($func != getRaitingImage)) {
+if (($res['result'] == 'fail') || ($func != getRatingImage)) {
     echo json_encode($res);
 }

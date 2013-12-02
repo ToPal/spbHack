@@ -1,11 +1,11 @@
 <?php
 
 include_once('funcs.php');
-include_once('Raitings.php');
+include_once('Ratings.php');
 include_once('qrs.php');
 include_once('Nearest.php');
 
-function func_getRaitingByAddress($address = null) {
+function func_getRatingByAddress($address = null) {
     if (($address == null) && !isset($_POST["address"])) {
         throw new Exception("Incorrect address");
     }
@@ -18,16 +18,10 @@ function func_getRaitingByAddress($address = null) {
         throw new Exception("Can't calculate coordinates for this address");
     }
 
-    $res = getCumulativeRaiting($coords);
+    $res = getCumulativeRating($coords);
     $res['coords'] = $coords;
     $res['nearest'] = getNearest();
     $res['map'] = "http://".$_SERVER['SERVER_NAME']."/map.php?x=".$coords['longitude']."&y=".$coords['latitude'];
-
-    return $res;
-}
-
-function func_getLocalRaitings() {
-    $res['LocalRaitings'] = getAllLocalRaitings();
 
     return $res;
 }
@@ -41,8 +35,8 @@ function func_generateImg() {
     $fon = imagecolorallocate($image, 255, 255, 255);
     imagefill($image, 0, 0, $fon);
     $text_color = imagecolorallocate($image, 0, 0, 0);
-    $raiting = func_getRaitingByAddress($_GET['address']);
-    imagestring($image, 4, 0, 0, round($raiting['raiting']), $text_color);
+    $rating = func_getRatingByAddress($_GET['address']);
+    imagestring($image, 4, 0, 0, round($rating['raiting']), $text_color);
 
     header('Content-type: image/png');
     imagepng($image);
@@ -66,7 +60,7 @@ function func_getPointArrays() {
         return $res;
     }
 
-    foreach ($points as $num => $point) {
+    foreach ($points as $point) {
         foreach ($point as $k => $v) {
             $res[$k][] = $v;
         }

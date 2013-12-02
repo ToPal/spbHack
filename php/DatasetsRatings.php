@@ -9,59 +9,59 @@ define('km', 0.01605);
 
 $current_location = null;
 
-function getRaitingByDatasetId($datasetId, $location) {
+function getRatingByDatasetId($datasetId, $location) {
     switch ($datasetId) {
         case Pharmacies_id:
-            return getPharmaciesRaiting($location);
+            return getPharmaciesRating($location);
         case Kindergartens_id:
-            return getKindergartensRaiting($location);
+            return getKindergartensRating($location);
         case Parks_id:
-            return getParksRaiting($location);
+            return getParksRating($location);
         case Cinema_id:
-            return getCinemaRaiting($location);
+            return getCinemaRating($location);
         case Metro_id:
-            return getMetroRaiting($location);
+            return getMetroRating($location);
         case Sport_id:
-            return getSportRaiting($location);
+            return getSportRating($location);
         case Market_id:
-            return getMarketRaiting($location);
+            return getMarketRating($location);
         default: return false;
     }
 }
 
 //Аптеки
-    function getPharmaciesRaiting($location) {
-        return getRaiting($location, 'datasets/pharmacy.csv', Pharmacies_id, 1, 5);
+    function getPharmaciesRating($location) {
+        return getRating($location, 'datasets/pharmacy.csv', Pharmacies_id, 1, 5);
     }
 
 //Детские сады
-    function getKindergartensRaiting($location) {
-        return getRaiting($location, 'datasets/kindergartens.csv', Kindergartens_id, 0.5, 4);
+    function getKindergartensRating($location) {
+        return getRating($location, 'datasets/kindergartens.csv', Kindergartens_id, 0.5, 4);
     }
 
 //Парки (включая парки не подведомственные)
-    function getParksRaiting($location) {
-        return getRaiting($location, 'datasets/parks.csv', Parks_id, 2, 10);
+    function getParksRating($location) {
+        return getRating($location, 'datasets/parks.csv', Parks_id, 2, 10);
     }
 
 //Кинотеатры
-    function getCinemaRaiting($location) {
-        return getRaiting($location, 'datasets/cinema.csv', Cinema_id, 1, 7);
+    function getCinemaRating($location) {
+        return getRating($location, 'datasets/cinema.csv', Cinema_id, 1, 7);
     }
 
 //Станции метрополитена
-    function getMetroRaiting($location) {
-        return getRaiting($location, 'datasets/metro.csv', Metro_id, 0.5, 4);
+    function getMetroRating($location) {
+        return getRating($location, 'datasets/metro.csv', Metro_id, 0.5, 4);
     }
 
 //Площадки спортивные универсальные
-    function getSportRaiting($location) {
-        return getRaiting($location, 'datasets/sport.csv', Sport_id, 0.5, 4);
+    function getSportRating($location) {
+        return getRating($location, 'datasets/sport.csv', Sport_id, 0.5, 4);
     }
 
 //Розничные рынки
-    function getMarketRaiting($location) {
-        return getRaiting($location, 'datasets/market.csv', Market_id, 1, 8);
+    function getMarketRating($location) {
+        return getRating($location, 'datasets/market.csv', Market_id, 1, 8);
     }
 
 
@@ -96,13 +96,13 @@ function parseCSV($filename, $columns, $delimiter) {
 
 
 
-function getRaiting($location, $csvName, $datasetId, $minDistance, $maxDistance) {
-    $distance = getRaitingFromDB($location, $datasetId);
+function getRating($location, $csvName, $datasetId, $minDistance, $maxDistance) {
+    $distance = getRatingFromDB($location, $datasetId);
     if (empty($distance)) {
         $data = parseCSV($csvName, getCsvColumns(Metro_id), ";");
 
         $distance = 1000;
-        foreach ($data as $k => $v) {
+        foreach ($data as $v) {
             $coord = getCoordsByAddress($v['address']);
             $current_distance = getDistance($location, $coord);
             if ($current_distance <= $minDistance) {
@@ -125,7 +125,7 @@ function getRaiting($location, $csvName, $datasetId, $minDistance, $maxDistance)
 }
 
 
-function getRaitingFromDB($location, $datasetId) {
+function getRatingFromDB($location, $datasetId) {
     $point = getNearestPoint($location);
     $point_id = getPointId($point['num_x'], $point['num_y']);
 
@@ -137,15 +137,14 @@ function getRaitingFromDB($location, $datasetId) {
 function addDataToDB($csvName, $datasetId, $minDistance, $maxDistance) {
     $data = parseCSV($csvName, getCsvColumns($datasetId), ";");
 
-    $res = 0;
-    foreach ($data as $k => $v) {
+    foreach ($data as $v) {
         $coord = getCoordsByAddress($v['address']);
 
         $ranges = getRanges($coord, $minDistance, $maxDistance);
-        foreach ($ranges['range_1'] as $k2 => $point) {
+        foreach ($ranges['range_1'] as  $point) {
             addDataResult($datasetId, $point['id'], $point['distance']);
         }
-        foreach ($ranges['range_2'] as $k2 => $point) {
+        foreach ($ranges['range_2'] as $point) {
             addDataResult($datasetId, $point['id'], $point['distance']);
         }
     }

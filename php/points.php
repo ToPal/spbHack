@@ -12,8 +12,8 @@ $x = getRanges($p, 0.5, 3);
 
 //Создаёт сетку для Москвы
 function create_points() {
-    for ($i_x = 0; $i_x < count_x; $i_x++) {
-        for ($i_y = 0; $i_y < count_y; $i_y++) {
+    for ($i_x = 0; $i_x < count_lat; $i_x++) {
+        for ($i_y = 0; $i_y < count_long; $i_y++) {
             $point = getPointByNum($i_x, $i_y);
 
             addPoint($i_x, $i_y, $point['longitude'], $point['latitude']);
@@ -24,8 +24,8 @@ function create_points() {
 
 function getPointByNum($num_x, $num_y) {
     $res = array();
-    $res['longitude'] = start_x - $num_x * delta_x;
-    $res['latitude'] = $num_y * delta_y + start_y;
+    $res['longitude'] = start_latitude - $num_x * delta_lat;
+    $res['latitude'] = $num_y * delta_long + start_longitude;
 
     return $res;
 }
@@ -35,14 +35,14 @@ function getPrevPointNums($point) {
     $y = $point['latitude'];
 
     if (! (is_numeric($x) && is_numeric($y)) ||
-        ($x > start_x) || ($x < end_x) ||
-        ($y < start_y) || ($y > end_y)) {
+        ($x > start_latitude) || ($x < end_latitude) ||
+        ($y < start_longitude) || ($y > end_longitude)) {
         return false;
     }
 
     $res = array();
-    $res['num_x'] = floor((start_x - $x) / delta_x);
-    $res['num_y'] = floor(($y - start_y) / delta_y);
+    $res['num_x'] = floor((start_latitude - $x) / delta_lat);
+    $res['num_y'] = floor(($y - start_longitude) / delta_long);
 
     return $res;
 }
@@ -71,7 +71,6 @@ function getNearestPoint($point) {
     $temp_point = getPointByNum($num['num_x'] + 1, $num['num_y'] + 1);
     $temp_distance = getDistance($point, $temp_point);
     if ($temp_distance < $min_distance) {
-        $min_distance = $temp_distance;
         $res['num_x'] = $num['num_x'] + 1;
         $res['num_y'] = $num['num_y'] + 1;
     }
@@ -90,8 +89,8 @@ function getRanges($point, $radius_1, $radius_2) {
 
     $nums = getPrevPointNums($point);
 
-    $radius_num_x = (floor($radius_2 * grad_in_km_x / delta_x) + 1);
-    $radius_num_y = (floor($radius_2 * grad_in_km_y / delta_y) + 1);
+    $radius_num_x = (floor($radius_2 * grad_in_km_lat / delta_lat) + 1);
+    $radius_num_y = (floor($radius_2 * grad_in_km_long / delta_long) + 1);
 
     $range_1 = array();
     $range_2 = array();

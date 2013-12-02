@@ -6,8 +6,8 @@
 
     define("Coords_ID", "ID");
     define("Coords_address", "Address");
-    define("Coords_latitude", "X");
-    define("Coords_longitude", "Y");
+    define("Coords_latitude", "Latitude");
+    define("Coords_longitude", "Longitude");
 
 function getCoordsFromDB($address) {
     $q = "SELECT ".Coords_latitude.", ".Coords_longitude." FROM ".TABLE_Coords." WHERE ".Coords_address."='".$address."'";
@@ -40,20 +40,20 @@ function addCoordsToDB($address, $latitude, $longitude) {
 define("TABLE_Points", "Points");
 
 define("Points_ID", "ID");
-define("Points_NumX", "Num_x");
-define("Points_NumY", "Num_y");
-define("Points_X", "X");
-define("Points_Y", "Y");
+define("Points_NumLatitude", "Num_Latitude");
+define("Points_NumLongitude", "Num_Longitude");
+define("Points_Latitude", "Latitude");
+define("Points_Longitude", "Longitude");
 
 function addPoint($num_x, $num_y, $x, $y) {
     if (! (is_numeric($x) && is_numeric($y) && is_numeric($num_x) && is_numeric($num_y)) ) {
         return false;
     }
 
-    $props[Points_NumX] = $num_x;
-    $props[Points_NumY] = $num_y;
-    $props[Points_X] = $x;
-    $props[Points_Y] = $y;
+    $props[Points_NumLatitude] = $num_x;
+    $props[Points_NumLongitude] = $num_y;
+    $props[Points_Latitude] = $x;
+    $props[Points_Longitude] = $y;
 
     return itdb(TABLE_Points, $props);
 }
@@ -63,7 +63,7 @@ function getPointId($num_x, $num_y) {
         return false;
     }
 
-    $q = "SELECT ".Points_ID." FROM ".TABLE_Points." WHERE ".Points_NumX."=".$num_x." AND ".Points_NumY."=".$num_y.";";
+    $q = "SELECT ".Points_ID." FROM ".TABLE_Points." WHERE ".Points_NumLatitude."=".$num_x." AND ".Points_NumLongitude."=".$num_y.";";
     return gefdb($q);
 }
 

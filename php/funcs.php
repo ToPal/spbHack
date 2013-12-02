@@ -40,6 +40,6 @@
     }
 
     function getDistance($firstCoords, $secondCoords) {
-        return sqrt(pow(($firstCoords['latitude'] - $secondCoords['latitude']) / grad_in_km_x, 2) +
-        pow(($firstCoords['longitude'] - $secondCoords['longitude']) / grad_in_km_y, 2));
+        return sqrt(pow(($firstCoords['latitude'] - $secondCoords['latitude']) / grad_in_km_lat, 2) +
+        pow(($firstCoords['longitude'] - $secondCoords['longitude']) / grad_in_km_long, 2));
     }

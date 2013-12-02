@@ -1,5 +1,5 @@
 <?php
-    define("DB", "tomsha_spbhack");
+    define("DB", "tomsha_pc_temp1");
     define("db_ipaddr", "localhost");
-    define("db_username", "tomsha_spbhack");
-    define("db_userpass", "spbhack11011");
+    define("db_username", "tomsha_pc_temp1");
+    define("db_userpass", "qazxsw123");
