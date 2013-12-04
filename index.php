@@ -14,6 +14,7 @@
     <script src="js/bootstrap/dist/js/bootstrap.min.js"></script>
     <link href="js/bootstrap/dist/css/bootstrap.css" rel="stylesheet">
     <script type="text/javascript" src="js/funcs.js"></script>
+    <script type="text/javascript" src="js/fabric.all.min.js"></script>
 
     <script src="http://api-maps.yandex.ru/2.0-stable/?load=package.full&lang=ru-RU" type="text/javascript"></script>
     <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?libraries=visualization&sensor=false">
@@ -99,8 +100,13 @@
 
             </div>
 
-            <div id="map"   style="float:left; width:800px; height: 600px;"></div>
-            <div id="g_map" style="float:left; width:800px; height: 600px;"></div>
+            <div     id="map"        style="float:left; width:800px; height: 600px;"></div>
+            <div     id="canvas_container"        style="float:left; width:800px; height: 600px;">
+                there is a canvas should bee
+                <canvas  id="canvas_id"  style="float:left; width:800px; height: 600px;">canvas</canvas>
+                there is a canvas ends must
+            </div>
+            <div     id="g_map"      style="float:left; width:800px; height: 600px; display:none"></div>
 
     </div>
 </body>
