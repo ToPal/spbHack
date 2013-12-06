@@ -1,14 +1,13 @@
 <?php
 function get_rating_image($address = "Мира, 1", $rsize = 100){
-	//header("Content-type: image/png");
   //дефолтные параментры
-	$source = $_SERVER["DOCUMENT_ROOT"]."/d/img/prettycity_green.png";
-	$font = "php/ARIAL.TTF";
+	$source   = $_SERVER["DOCUMENT_ROOT"]."/d/img/prettycity_green.png";
+	$font     = "php/ARIAL.TTF";
 	$fontSize = 70;
 
   //загружаем болванку c лого.	
 	if (!file_exists($source) )
-		echo "source file not found: ".$source;
+		throw new Exception( "source file not found: ".$source );
 	$image = imagecreatefrompng( $source );
 	imageantialias($image, true);
 	imagealphablending($image, true);
@@ -16,13 +15,8 @@ function get_rating_image($address = "Мира, 1", $rsize = 100){
 	list($imwidth,$imheight,$type,$attr) = getimagesize($source);
 
   //получаем рейтинг
-	//if ( isset($_REQUEST['address']) )
-	//	$address = $_REQUEST['address'];
-	//else
-	//	$address = "Фрунзенская, 28";
 	$raiting = func_getRaitingByAddress( $address );
 	$raiting = round( $raiting['raiting'] );
-	$raiting = 100;
 
   //создаем болванку текста
 	$textim  = imagecreatetruecolor($imwidth, $imheight);
@@ -50,31 +44,24 @@ function get_rating_image($address = "Мира, 1", $rsize = 100){
 	imagecopy($dst_im, $src_im, $dst_x, $dst_y, $src_x, $src_y, $src_w, $src_h);
 
   //ресайзим ресайзу чгоблин картинку
-//	if ( isset( $_REQUEST['size'] ) ){
-//		$rsize = $_REQUEST['size'];
-		$res_im = imagecreatetruecolor($rsize, $rsize);
-		imageantialias($res_im, true);
-		imagealphablending($res_im, false);
-		imagesavealpha($res_im, true);
-		imagecopyresampled(
-			$dst_image = $res_im, 
-			$src_image = $dst_im, 
-			$dst_x = 0, 
-			$dst_y = 0, 
-			$src_x = 0, 
-			$src_y = 0, 
-			$dst_wi = $rsize, 
-			$dst_hi = $rsize, 
-			$src_wi = $imwidth , 
-			$src_hi = $imheight);
-		$dst_im = $res_im;
-//	}
-
-
+	$res_im = imagecreatetruecolor($rsize, $rsize);
+	imageantialias($res_im, true);
+	imagealphablending($res_im, false);
+	imagesavealpha($res_im, true);
+	imagecopyresampled(
+		$dst_image = $res_im, 
+		$src_image = $dst_im, 
+		$dst_x = 0, 
+		$dst_y = 0, 
+		$src_x = 0, 
+		$src_y = 0, 
+		$dst_wi = $rsize, 
+		$dst_hi = $rsize, 
+		$src_wi = $imwidth , 
+		$src_hi = $imheight);
+	$dst_im = $res_im;
 
   //отдаем картинку
-	
-	//ImagePng($dst_im);
 	return $dst_im;
 
 }
