@@ -1,19 +1,10 @@
 <?php
-	include 'php/main_funcs.php';
-
-	header("Content-type: image/png");
-
-
-
+function get_rating_image($address = "Мира, 1", $rsize = 100){
+	//header("Content-type: image/png");
   //дефолтные параментры
 	$source = $_SERVER["DOCUMENT_ROOT"]."/d/img/prettycity_green.png";
 	$font = "php/ARIAL.TTF";
 	$fontSize = 70;
-
-  //параметры из запроса
-
-  //получаем рейтинг
-
 
   //загружаем болванку c лого.	
 	if (!file_exists($source) )
@@ -25,10 +16,10 @@
 	list($imwidth,$imheight,$type,$attr) = getimagesize($source);
 
   //получаем рейтинг
-	if ( isset($_REQUEST['address']) )
-		$address = $_REQUEST['address'];
-	else
-		$address = "Фрунзенская, 28";
+	//if ( isset($_REQUEST['address']) )
+	//	$address = $_REQUEST['address'];
+	//else
+	//	$address = "Фрунзенская, 28";
 	$raiting = func_getRaitingByAddress( $address );
 	$raiting = round( $raiting['raiting'] );
 	$raiting = 100;
@@ -42,7 +33,7 @@
 	$textcol = imagecolorallocatealpha($textim, 255, 255, 255, 0);
 	imagefill($textim, 0, 0, $alpha);
 	if (! file_exists( $font ) ) 
-		echo "font file not found";
+		throw new Exception("font file not found");
 	$text_props = imagettftext($textim, $fontSize, 0, 0, 100, $textcol, $font, $raiting."%");
 
   //сливаем текст и лого
@@ -59,8 +50,8 @@
 	imagecopy($dst_im, $src_im, $dst_x, $dst_y, $src_x, $src_y, $src_w, $src_h);
 
   //ресайзим ресайзу чгоблин картинку
-	if ( isset( $_REQUEST['size'] ) ){
-		$rsize = $_REQUEST['size'];
+//	if ( isset( $_REQUEST['size'] ) ){
+//		$rsize = $_REQUEST['size'];
 		$res_im = imagecreatetruecolor($rsize, $rsize);
 		imageantialias($res_im, true);
 		imagealphablending($res_im, false);
@@ -77,32 +68,15 @@
 			$src_wi = $imwidth , 
 			$src_hi = $imheight);
 		$dst_im = $res_im;
-
-		//echo " rsize = $rsize <br>";
-	}else{
-		//echo "size not found";
-	}
+//	}
 
 
 
   //отдаем картинку
-	/*
-	echo "src_x = $src_x <br>";
-	echo "src_y = $src_y <br>";
-	echo "src_w = $src_w <br>";
-	echo "src_h = $src_h <br>";
+	
+	//ImagePng($dst_im);
+	return $dst_im;
 
-	echo "text_props 0  = ".$text_props[0]."<br>";
-	echo "text_props 1  = ".$text_props[1]."<br><br>";
-	echo "text_props 2  = ".$text_props[2]."<br>";
-	echo "text_props 3  = ".$text_props[3]."<br><br>";
-	echo "text_props 4  = ".$text_props[4]."<br>";
-	echo "text_props 5  = ".$text_props[5]."<br><br>";
-	echo "text_props 6  = ".$text_props[6]."<br>";
-	echo "text_props 7  = ".$text_props[7]."<br>";*/
-
-	//var_dump($text_props);
-	//ImagePng($textim);
-	ImagePng($dst_im);
+}
 	
 ?>
