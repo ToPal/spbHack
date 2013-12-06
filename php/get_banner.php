@@ -1,12 +1,18 @@
 <?php
+	include 'php/main_funcs.php';
+
 	header("Content-type: image/png");
+
 
 
   //дефолтные параментры
 	$source = $_SERVER["DOCUMENT_ROOT"]."/d/img/prettycity_green.png";
-	$font = "./ARIAL.TTF";
+	$font = "php/ARIAL.TTF";
+	$fontSize = 70;
 
   //параметры из запроса
+
+  //получаем рейтинг
 
 
   //загружаем болванку c лого.	
@@ -18,9 +24,18 @@
 	imagesavealpha($image, true);
 	list($imwidth,$imheight,$type,$attr) = getimagesize($source);
 
+  //получаем рейтинг
+	if ( isset($_REQUEST['address']) )
+		$address = $_REQUEST['address'];
+	else
+		$address = "Фрунзенская, 28";
+	$raiting = func_getRaitingByAddress( $address );
+	$raiting = round( $raiting['raiting'] );
+	$raiting = 100;
+
   //создаем болванку текста
 	$textim  = imagecreatetruecolor($imwidth, $imheight);
-	imageantialias($textim, false);
+	imageantialias($textim, true);
 	imagealphablending($textim, true);
 	imagesavealpha($textim, false);
 	$alpha   = imagecolorallocatealpha($textim, 0, 0, 0, 127);
@@ -28,7 +43,7 @@
 	imagefill($textim, 0, 0, $alpha);
 	if (! file_exists( $font ) ) 
 		echo "font file not found";
-	$text_props = imagettftext($textim, 60, 0, 0, 100, $textcol, $font, "100%");
+	$text_props = imagettftext($textim, $fontSize, 0, 0, 100, $textcol, $font, $raiting."%");
 
   //сливаем текст и лого
 	$dst_im = $image;
@@ -43,6 +58,30 @@
 	$dst_y  = ($dst_h - $src_h) / 2 + 15;
 	imagecopy($dst_im, $src_im, $dst_x, $dst_y, $src_x, $src_y, $src_w, $src_h);
 
+  //ресайзим ресайзу чгоблин картинку
+	if ( isset( $_REQUEST['size'] ) ){
+		$rsize = $_REQUEST['size'];
+		$res_im = imagecreatetruecolor($rsize, $rsize);
+		imageantialias($res_im, true);
+		imagealphablending($res_im, false);
+		imagesavealpha($res_im, true);
+		imagecopyresampled(
+			$dst_image = $res_im, 
+			$src_image = $dst_im, 
+			$dst_x = 0, 
+			$dst_y = 0, 
+			$src_x = 0, 
+			$src_y = 0, 
+			$dst_wi = $rsize, 
+			$dst_hi = $rsize, 
+			$src_wi = $imwidth , 
+			$src_hi = $imheight);
+		$dst_im = $res_im;
+
+		//echo " rsize = $rsize <br>";
+	}else{
+		//echo "size not found";
+	}
 
 
 
@@ -65,4 +104,5 @@
 	//var_dump($text_props);
 	//ImagePng($textim);
 	ImagePng($dst_im);
+	
 ?>
