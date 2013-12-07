@@ -169,8 +169,8 @@ function delFileInformationFromDB($id) {
 }
 
 function updFileInformationFromDB($id, $name, $url, $filename, $lastUpdate) {
-    $q = "UPDATE ".TABLE_Files." SET ".Files_Name."=".$name.", ".Files_Url."=".$url.", "
-        .Files_Filename."=".$filename.", ".Files_LastUpdate."=".$lastUpdate
+    $q = "UPDATE ".TABLE_Files." SET ".Files_ID."=".$id.", ".Files_Name."=".$name.", "
+        .Files_Url."=".$url.", ".Files_Filename."=".$filename.", ".Files_LastUpdate."=".$lastUpdate
         ." WHERE ".Files_ID."=".$id;
 
     return gefdb($q);
