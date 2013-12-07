@@ -27,7 +27,7 @@ function getFileString(file) {
     innerString += ['<input type="button" onclick="updFile(', file.ID, ');" value="Обновить">'].join('');
     innerString += ['<input type="button" onclick="delFile(', file.ID, ');" value="Удалить">'].join('');
 
-    return ['<div id="row', file.id, '">', innerString, '</div>'].join("");
+    return ['<div id="row', file.ID, '">', innerString, '</div>'].join("");
 }
 
 function setFilesInformation(text) {
