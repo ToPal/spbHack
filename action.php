@@ -7,6 +7,7 @@ define("getRatingByAddress", "getRaitingByAddress");
 define("getRatingImage", "getRaitingImage");
 define("getPoints", "getPoints");
 define("getPointArrays", "getPointArrays");
+define("FilesInformation", "FilesInformation");
 
 $res = array();
 $func = "";
@@ -27,6 +28,8 @@ try {
         case getRatingImage: func_generateImg(); break;
         case getPoints: $res = func_getPoints(); break;
         case getPointArrays: $res = func_getPointArrays(); break;
+
+        case FilesInformation: $res = func_getFilesInformation(); break;
 
         default: throw new Exception("Неизвестная функция");
     }

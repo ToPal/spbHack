@@ -69,3 +69,51 @@ function func_getPointArrays() {
     $res[FuncName] = $pointArrays;
     return $res;
 }
+
+function func_getFilesInformation() {
+    $res = array();
+
+    define('subfunc_getInfo', 'getFilesInformation');
+    define('subfunc_newInfo', 'newFilesInformation');
+    define('subfunc_updInfo', 'updFilesInformation');
+    define('subfunc_delInfo', 'delFilesInformation');
+
+    switch ($_POST['subfunc']) {
+        case subfunc_getInfo: {
+                $files = getFilesInformationFromDB();
+                $res['files'] = $files;
+                break;
+            }
+        case subfunc_newInfo: {
+                $Name = $_POST["Name"];
+                $Url = $_POST["Url"];
+                $Filename = $_POST["Filename"];
+                $Last_update = $_POST["Last_update"];
+
+                addFileInformationToDB($Name, $Url, $Filename, $Last_update);
+                break;
+            }
+        case subfunc_updInfo: {
+                $id = $_POST["id"];
+                $Name = $_POST["Name"];
+                $Url = $_POST["Url"];
+                $Filename = $_POST["Filename"];
+                $Last_update = $_POST["Last_update"];
+
+                updFileInformationFromDB($id, $Name, $Url, $Filename, $Last_update);
+                break;
+        }
+        case subfunc_delInfo: {
+                $id = $_POST["id"];
+
+                delFileInformationFromDB($id);
+                break;
+            }
+
+        default: {
+            throw new Exception("Неизвестная подфункция");
+            }
+    }
+
+    return $res;
+}

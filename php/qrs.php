@@ -127,7 +127,77 @@ function updateDataResult($id, $result) {
 
 
 function getPointsForMap() {
-    $q = "SELECT Points.X, Points.Y, SUM(Results.Result) FROM Results, Points WHERE Points.ID=Results.ID_Point GROUP BY Points.ID";
+    $q = "SELECT ".Points_Latitude.", ".Points_Longitude.", SUM(".Results_Result.")".
+        " FROM ".TABLE_Results.", ".TABLE_Points.
+        " WHERE ".TABLE_Points.".".Points_ID."=".TABLE_Results.".".Results_PointId.
+        " GROUP BY ".TABLE_Points.".".Points_ID;
 
     return gafdb($q);
+}
+
+
+
+
+
+define("TABLE_Files", "Files");
+
+define("Files_ID", "ID");
+define("Files_Name", "Name");
+define("Files_Url", "Url");
+define("Files_Filename", "Filename");
+define("Files_LastUpdate", "Last_update");
+
+function getFilesInformationFromDB() {
+    $q = "SELECT * FROM ".TABLE_Files;
+
+    return gafdb($q);
+}
+
+function addFileInformationToDB($name, $url, $filename, $lastUpdate) {
+    $props[Files_Name] = $name;
+    $props[Files_Url] = $url;
+    $props[Files_Filename] = $filename;
+    $props[Files_LastUpdate] = $lastUpdate;
+
+    return itdb(TABLE_Files, $props);
+}
+
+function delFileInformationFromDB($id) {
+    $q = "DELETE FROM ".TABLE_Files." WHERE ".Files_ID."=".$id;
+
+    return gefdb($q);
+}
+
+function updFileInformationFromDB($id, $name, $url, $filename, $lastUpdate) {
+    $q = "UPDATE ".TABLE_Files." SET ".Files_Name."=".$name.", ".Files_Url."=".$url.", "
+        .Files_Filename."=".$filename.", ".Files_LastUpdate."=".$lastUpdate
+        ." WHERE ".Files_ID."=".$id;
+
+    return gefdb($q);
+}
+
+
+
+
+
+define("TABLE_Data", "Data");
+
+define("Data_ID", "ID");
+define("Data_DatabaseID", "DatabaseID");
+define("Data_Latitude", "Latitude");
+define("Data_Longitude", "Longitude");
+define("Data_String", "String");
+
+
+function addDataRowToDB($DatabaseID, $latitude, $longitude, $string) {
+    if (! (is_numeric($DatabaseID) && is_numeric($latitude) && is_numeric($longitude) && ($string != "")) ) {
+        return false;
+    }
+
+    $props[Data_DatabaseID] = $DatabaseID;
+    $props[Data_Latitude] = $latitude;
+    $props[Data_Longitude] = $longitude;
+    $props[Data_String] = $string;
+
+    return itdb(TABLE_Data, $props);
 }

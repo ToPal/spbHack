@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Настройка путей к файлам</title>
+    <script type="text/javascript" src="js/jquery-2.0.3.js"></script>
+    <script type="text/javascript" src="js/admin.js"></script>
+</head>
+<body>
+    <div id="status"></div><br>
+    <h3>Список файлов:</h3><br>
+    <div id="files_container">
+
+    </div><br>
+    <div id="new_file">
+        Name: <input type="text" id="Name">
+        Url: <input type="text" id="Url">
+        Filename: <input type="text" id="Filename">
+        Last_update: <input type="text" id="Last_update">
+        <input type="button" onclick="newFile();" value="Обновить">
+    </div>
+    <input type="button" onclick="update_files();" value="Обновить информацию">
+</body>
+</html>
