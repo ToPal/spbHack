@@ -2,7 +2,7 @@ function update_files() {
     ajax_action('getFilesInformation', [], function(msg) {
         var newFiles = [];
         for (var i in msg.files) {
-            newFiles += getFileString(msg.files[i]) + "<br>";
+            newFiles.push(getFileString(msg.files[i]) + "<br>");
         }
         var newFilesString = newFiles.join("<br>\n");
 
