@@ -1,8 +1,8 @@
 function update_files() {
     ajax_action('getFilesInformation', [], function(msg) {
         var newFiles = [];
-        for (var file in msg.files) {
-            newFiles += getFileString(file) + "<br>";
+        for (var i in msg.files) {
+            newFiles += getFileString(msg.files[i]) + "<br>";
         }
         var newFilesString = newFiles.join("<br>\n");
 
@@ -12,37 +12,6 @@ function update_files() {
             setFilesInformation(newFilesString);
         }
     });
-//    setStatus("Подождите..");
-//    $.ajax({
-//        type: "POST",
-//        dataType: "json",
-//        url: "action.php",
-//        data: {func: 'FilesInformation',
-//               subfunc: 'getFilesInformation'},
-//        async: true,
-//        success: function(msg){
-//            if (msg.result != "success") {
-//                setStatus(msg.errorMessage);
-//                return;
-//            }
-//
-//            var newFiles = [];
-//            for (var file in msg.files) {
-//                newFiles += getFileString(file) + "<br>";
-//            }
-//            var newFilesString = newFiles.join("<br>\n");
-//
-//            if (newFilesString == "") {
-//                setStatus("Нет информации ни об одном файле");
-//            } else {
-//                setFilesInformation(newFilesString);
-//                setStatus('');
-//            }
-//        },
-//        error: function(jqXHR, textStatus, errorThrown ) {
-//            setStatus("Возникла ошибка. Обратитесь, пожалуйста, к разработчику.");
-//        }
-//    });
 }
 
 
@@ -111,6 +80,8 @@ function getFileInfoById(id) {
     if (id != "new") {
         params["id"] = $(file_id + " > #id").val();
     }
+
+    return params;
 }
 
 function setStatus(status) {
