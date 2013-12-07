@@ -18,11 +18,11 @@ function update_files() {
 function getFileString(file) {
     var innerString = "";
 
-    innerString += ['id: <input type="text" id="id" value="', file.id, '>'].join('');
-    innerString += ['Name: <input type="text" id="Name" value="', file.Name, '>'].join('');
-    innerString += ['Url: <input type="text" id="Url" value="', file.Url, '>'].join('');
-    innerString += ['Filename: <input type="text" id="Filename" value="', file.Filename, '>'].join('');
-    innerString += ['Last_update: <input type="text" id="Last_update" value="', file.Last_update, '>'].join('');
+    innerString += ['id: <input type="text" id="id" value="', file.id, '">'].join('');
+    innerString += ['Name: <input type="text" id="Name" value="', file.Name, '">'].join('');
+    innerString += ['Url: <input type="text" id="Url" value="', file.Url, '">'].join('');
+    innerString += ['Filename: <input type="text" id="Filename" value="', file.Filename, '">'].join('');
+    innerString += ['Last_update: <input type="text" id="Last_update" value="', file.Last_update, '">'].join('');
 
     innerString += ['<input type="button" onclick="updFile(', file.id, ');" value="Обновить">'].join('');
     innerString += ['<input type="button" onclick="delFile(', file.id, ');" value="Удалить">'].join('');
