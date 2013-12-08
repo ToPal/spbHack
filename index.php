@@ -101,13 +101,6 @@
             </div>
 
             <div     id="map"        style="float:left; width:800px; height: 600px;"></div>
-            <div     id="canvas_container"        style="float:left; width:800px; height: 600px;">
-                there is a canvas should bee
-                <canvas  id="canvas_id"  style="float:left; width:800px; height: 600px;">canvas</canvas>
-                there is a canvas ends must
-            </div>
-            <div     id="g_map"      style="float:left; width:800px; height: 600px; display:none"></div>
-
     </div>
 </body>
 <script type="text/javascript">

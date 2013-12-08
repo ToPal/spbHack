@@ -72,7 +72,7 @@ var mmap;
 var gmap;
 var points;
 var placemark;
-var pols;
+var pols = [];
 var maxVal;
 var minVal;
 var vLen
@@ -91,20 +91,6 @@ function initMap(x,y){
         preset: 'twirl#redIcon' 
     });
     mmap.geoObjects.add(placemark);
-
-  /*подгружаем гуглокарты*/
-    var gCenter = new google.maps.LatLng(x,y);
-    var gOptions = {
-        zoom: 16,
-        center: gCenter,
-        mapTypeId: google.maps.MapTypeId.ROADMAP
-    };
-    gmap = new google.maps.Map(document.getElementById('g_map'),gOptions);
-    var gMarker = new google.maps.Marker({
-        position: gCenter,
-        map: gmap,
-        tittle: "Hello!"
-    })
 
   /*подгружаем и рисуем теплокубики*/
     reloadWarmMap();
@@ -161,7 +147,6 @@ function reloadWarmMap(){
     var RGBPoints = [];
     RGBPoints[0] = [252, 0,   0];
     RGBPoints[1] = [252, 247, 0];
-    /*RGBPoints[2] = [0,   247, 0];*/
     RGBPoints[2] = [0,   218, 26];
     maxVal = parseFloat(points[0][2]);
     minVal = parseFloat(points[0][2]);
@@ -179,91 +164,16 @@ function reloadWarmMap(){
     cLen     = getLineLength(RGBPoints);
     dColor   = cLen / nSteps;
 
-    /* fabric */
-        //canvas = new fabric.Canvas('canvas_id');
-
-        canvas = new fabric.Element('canvas_id', {
-          renderOnAddRemove: false,
-          stateful: false
-        });
-        canvas.setWidth(mmap.container.getSize()[0]);
-        canvas.setHeight(mmap.container.getSize()[1]);
-        var f = [];
-        f.bg = new fabric.Rect({
-            left: canvas.getCenter()[0],
-            top:  canvas.getCenter()[1],
-            fill: 'gray',
-            width:  mmap.container.getSize()[0],
-            height: mmap.container.getSize()[1]
-        });
-        canvas.add(f.bg);
-
-        projection = mmap.options.get('projection');
-        global_placemark = projection.toGlobalPixels(placemark.geometry._Bb[0], mmap.getZoom());
-        screen_placemark = mmap.converter.globalToPage(global_placemark);
-        local_placemark = [];
-        local_placemark[0] = screen_placemark[0] - $("#map").position().left;
-        local_placemark[1] = screen_placemark[1] - $("#map").position().top;
-
-        f.placemark = new fabric.Rect({
-            left: local_placemark[0],
-            top : local_placemark[1],
-            fill: 'green',
-            width : 30,
-            height: 30
-        })
-        canvas.add(f.placemark);
-
-        pix_delta = projection.toGlobalPixels([dx,dy],mmap.getZoom());
-        var pix_dx = pix_delta[0];
-        var pix_dy = pix_delta[1];
-
-
-        local_points = [];
-        var k = 0;
-        var rect;
-        group = new fabric.Group([]);
-        while(points[++k]){
-            var val      = parseFloat(points[k][2]);
-            var cValStep = Math.round((val - minVal) / dVal);
-            var ColorX   = dColor * cValStep;
-            var cColor   = lineToFunction (RGBPoints,ColorX);
-            //console.log("val="+val + "  cValStep="+cValStep + "  ColorX="+ColorX + "  cColor="+cColor);
-            polColor = "rgb(" + Math.round(cColor[0]) + "," + Math.round(cColor[1]) + "," + Math.round(cColor[2]) + ")";
-            local_points[k] = globalToLocal(points[k]);
-            //local_points[k][0] /=-50;
-            //local_points[k][1] /=-50;
-            
-            rect = new fabric.Rect({
-                left: local_points[k][0],
-                //left: 50,
-                top : local_points[k][1],
-                //top : 50,
-                fill: polColor,
-                width : pix_dx,
-                height: pix_dy
-            });
-            //canvas.add(rect);
-            group.add(rect);
-        }
-        canvas.add(group);
-        canvas.renderAll();
-    /* end fabric */
-
-
-
-    
-
     var i = 1;
     while(points[i]){
         var x   = parseFloat(points[i].X);
         var y   = parseFloat(points[i].Y);
 
-
         if ( x < bounds [0][0]-dx || x > bounds[1][0]+dx || y < bounds[0][1]-dy || y > bounds [1][1]+dy ){
             //i++;
             //continue;
         }
+
         val      = parseFloat(points[i][2]);
         var cValStep = Math.round((val - minVal) / dVal);
         var ColorX   = dColor * cValStep;
@@ -271,7 +181,6 @@ function reloadWarmMap(){
         //console.log("val="+val + "  cValStep="+cValStep + "  ColorX="+ColorX + "  cColor="+cColor);
         polColor = "rgb(" + Math.round(cColor[0]) + "," + Math.round(cColor[1]) + "," + Math.round(cColor[2]) + ")";
 
-        /*
         var pol = new ymaps.Polygon([[
             [x-dx,y+dy],
             [x+dx,y+dy],
@@ -288,16 +197,7 @@ function reloadWarmMap(){
                 opacity:0.7
             });
         pols[pols.length] = pol;
-        Xes[i] = x;
-        Yes[i] = y;
-        //mmap.geoObjects.add(pol);
-        */
-
-
-        /*
-        if ( ! (x < bounds [0][0]-dx || x > bounds[1][0]+dx || y < bounds[0][1]-dy || y > bounds [1][1]+dy) ){
-            ptsum += parseFloat(points[i][2]);
-        }*/
+        mmap.geoObjects.add(pol);
 
         i++;
     }
