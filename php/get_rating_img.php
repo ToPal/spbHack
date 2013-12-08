@@ -1,11 +1,22 @@
 <?php
 function get_rating_image($address = "Мира, 1", $rsize = 100){
   //дефолтные параментры
-	$source   = $_SERVER["DOCUMENT_ROOT"]."/d/img/prettycity_green.png";
+	$logo_dir = $_SERVER["DOCUMENT_ROOT"]."/d/img/";
+	$source   = $logo_dir."prettycity_green.png";
 	$font     = "php/ARIAL.TTF";
 	$fontSize = 70;
 
-  //загружаем болванку c лого.	
+  //получаем рейтинг
+	$raiting = func_getRaitingByAddress( $address );
+	$raiting = round( $raiting['raiting'] );
+
+  //загружаем болванку c лого.
+   	if ( $raiting >= 75 )
+   		$source = $logo_dir."prettycity_green.png";
+   	if ( $raiting < 75 and $raiting >= 26 )
+   		$source = $logo_dir."prettycity_brown.png";
+   	if ( $raiting < 26 )
+   		$source = $logo_dir."prettycity_gray.png";
 	if (!file_exists($source) )
 		throw new Exception( "source file not found: ".$source );
 	$image = imagecreatefrompng( $source );
@@ -14,9 +25,6 @@ function get_rating_image($address = "Мира, 1", $rsize = 100){
 	imagesavealpha($image, true);
 	list($imwidth,$imheight,$type,$attr) = getimagesize($source);
 
-  //получаем рейтинг
-	$raiting = func_getRaitingByAddress( $address );
-	$raiting = round( $raiting['raiting'] );
 
   //создаем болванку текста
 	$textim  = imagecreatetruecolor($imwidth, $imheight);
