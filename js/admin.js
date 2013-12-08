@@ -18,6 +18,7 @@ function update_files() {
 function getFileString(file) {
     var innerString = "";
 
+    innerString += ['<input type="hidden" id="cur_id" value="', file.ID, '">'].join('');
     innerString += ['id: <input type="text" id="id" value="', file.ID, '">'].join('');
     innerString += ['Name: <input type="text" id="Name" value="', file.Name, '">'].join('');
     innerString += ['Url: <input type="text" id="Url" value="', file.Url, '">'].join('');
@@ -72,13 +73,15 @@ function getFileInfoById(id) {
 
     var params = [];
 
+
+    params["id"] = $(file_id + " > #id").val();
     params["Name"] = $(file_id + " > #Name").val();
     params["Url"] = $(file_id + " > #Url").val();
     params["Filename"] = $(file_id + " > #Filename").val();
     params["Last_update"] = $(file_id + " > #Last_update").val();
 
     if (id != "new") {
-        params["id"] = $(file_id + " > #id").val();
+        params["cur_id"] = $(file_id + " > #cur_id").val();
     }
 
     return params;

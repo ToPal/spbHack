@@ -153,7 +153,8 @@ function getFilesInformationFromDB() {
     return gafdb($q);
 }
 
-function addFileInformationToDB($name, $url, $filename, $lastUpdate) {
+function addFileInformationToDB($id, $name, $url, $filename, $lastUpdate) {
+    $props[Files_ID] = $id;
     $props[Files_Name] = $name;
     $props[Files_Url] = $url;
     $props[Files_Filename] = $filename;
@@ -168,7 +169,7 @@ function delFileInformationFromDB($id) {
     return gefdb($q);
 }
 
-function updFileInformationFromDB($id, $name, $url, $filename, $lastUpdate) {
+function updFileInformationFromDB($curr_id, $id, $name, $url, $filename, $lastUpdate) {
     $params = array();
 
     $params[Files_ID] = $id;
@@ -178,7 +179,7 @@ function updFileInformationFromDB($id, $name, $url, $filename, $lastUpdate) {
     $params[Files_LastUpdate] = $lastUpdate;
 
     $q = "UPDATE ".TABLE_Files." SET ".get_update_string($params)
-        ." WHERE ".Files_ID."=".$id;
+        ." WHERE ".Files_ID."=".$curr_id;
 
     return gefdb($q);
 }

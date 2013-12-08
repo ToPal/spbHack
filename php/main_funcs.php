@@ -85,22 +85,24 @@ function func_getFilesInformation() {
                 break;
             }
         case subfunc_newInfo: {
-                $Name = $_POST["Name"];
-                $Url = $_POST["Url"];
-                $Filename = $_POST["Filename"];
-                $Last_update = $_POST["Last_update"];
-
-                addFileInformationToDB($Name, $Url, $Filename, $Last_update);
-                break;
-            }
-        case subfunc_updInfo: {
                 $id = $_POST["id"];
                 $Name = $_POST["Name"];
                 $Url = $_POST["Url"];
                 $Filename = $_POST["Filename"];
                 $Last_update = $_POST["Last_update"];
 
-                updFileInformationFromDB($id, $Name, $Url, $Filename, $Last_update);
+                addFileInformationToDB($id, $Name, $Url, $Filename, $Last_update);
+                break;
+            }
+        case subfunc_updInfo: {
+                $curr_id = $_POST["curr_id"];
+                $id = $_POST["id"];
+                $Name = $_POST["Name"];
+                $Url = $_POST["Url"];
+                $Filename = $_POST["Filename"];
+                $Last_update = $_POST["Last_update"];
+
+                updFileInformationFromDB($curr_id, $id, $Name, $Url, $Filename, $Last_update);
                 break;
         }
         case subfunc_delInfo: {
