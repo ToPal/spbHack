@@ -81,7 +81,7 @@ function getFileInfoById(id) {
     params["Last_update"] = $(file_id + " > #Last_update").val();
 
     if (id != "new") {
-        params["cur_id"] = $(file_id + " > #cur_id").val();
+        params["curr_id"] = $(file_id + " > #cur_id").val();
     }
 
     return params;
