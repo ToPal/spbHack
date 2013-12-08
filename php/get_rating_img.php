@@ -3,7 +3,7 @@ function get_rating_image($address = "Мира, 1", $rsize = 100){
   //дефолтные параментры
 	$logo_dir = $_SERVER["DOCUMENT_ROOT"]."/d/img/";
 	$source   = $logo_dir."prettycity_green.png";
-	$font     = "php/ARIAL.TTF";
+	$font     = "php/DaysOne-Regular.ttf";
 	$fontSize = 70;
 
   //получаем рейтинг
