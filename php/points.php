@@ -49,11 +49,11 @@ function getPrevPointNums($point) {
 
 function getNearestPoint($point) {
     $num = getPrevPointNums($point);
-    $min_distance = getDistance($point, getPointByNum($num['num_x'], $num['num_y']));
+    $min_distance = getDistanceInKm($point, getPointByNum($num['num_x'], $num['num_y']));
     $res = $num;
 
     $temp_point = getPointByNum($num['num_x'] + 1, $num['num_y']);
-    $temp_distance = getDistance($point, $temp_point);
+    $temp_distance = getDistanceInKm($point, $temp_point);
     if ($temp_distance < $min_distance) {
         $min_distance = $temp_distance;
         $res['num_x'] = $num['num_x'] + 1;
@@ -61,7 +61,7 @@ function getNearestPoint($point) {
     }
 
     $temp_point = getPointByNum($num['num_x'], $num['num_y'] + 1);
-    $temp_distance = getDistance($point, $temp_point);
+    $temp_distance = getDistanceInKm($point, $temp_point);
     if ($temp_distance < $min_distance) {
         $min_distance = $temp_distance;
         $res['num_x'] = $num['num_x'];
@@ -69,7 +69,7 @@ function getNearestPoint($point) {
     }
 
     $temp_point = getPointByNum($num['num_x'] + 1, $num['num_y'] + 1);
-    $temp_distance = getDistance($point, $temp_point);
+    $temp_distance = getDistanceInKm($point, $temp_point);
     if ($temp_distance < $min_distance) {
         $res['num_x'] = $num['num_x'] + 1;
         $res['num_y'] = $num['num_y'] + 1;
@@ -98,7 +98,7 @@ function getRanges($point, $radius_1, $radius_2) {
     for ($i_x = -$radius_num_x; $i_x <= $radius_num_x; $i_x++) {
         for ($i_y = -$radius_num_y; $i_y <= $radius_num_y; $i_y++) {
             $temp_point = getPointByNum($nums['num_x'] + $i_x, $nums['num_y'] + $i_y);
-            $distance = getDistance($point, $temp_point);
+            $distance = getDistanceInKm($point, $temp_point);
             if ($distance <= $radius_2) {
                 $id = getPointId($nums['num_x'] + $i_x, $nums['num_y'] + $i_y);
 

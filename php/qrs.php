@@ -184,6 +184,12 @@ function updFileInformationFromDB($curr_id, $id, $name, $url, $filename, $lastUp
     return gefdb($q);
 }
 
+function getFilesAddressesFromDB() {
+    $q = "SELECT ".Files_ID.", ".Files_Url.", ".Files_Filename." FROM ".TABLE_Files;
+
+    return geafdb($q);
+}
+
 
 
 
@@ -195,9 +201,11 @@ define("Data_DatabaseID", "DatabaseID");
 define("Data_Latitude", "Latitude");
 define("Data_Longitude", "Longitude");
 define("Data_String", "String");
+define("Data_Last_update", "Last_update");
+define("Data_isNew", "isNew");
 
 
-function addDataRowToDB($DatabaseID, $latitude, $longitude, $string) {
+function addNewDataRowToDB($DatabaseID, $latitude, $longitude, $string) {
     if (! (is_numeric($DatabaseID) && is_numeric($latitude) && is_numeric($longitude) && ($string != "")) ) {
         return false;
     }
@@ -206,6 +214,41 @@ function addDataRowToDB($DatabaseID, $latitude, $longitude, $string) {
     $props[Data_Latitude] = $latitude;
     $props[Data_Longitude] = $longitude;
     $props[Data_String] = $string;
+
+    return itdb(TABLE_Data, $props);
+}
+
+function isDatasetRowExist($datasetId, $datasetRow) {
+    $q = "SELECT ".Data_ID." FROM ".TABLE_Data." WHERE ".Data_DatabaseID."=".$datasetId." AND ".Data_String."=".$datasetRow;
+
+    $res = gefdb($q);
+    return (is_numeric($res) && ($res > 0));
+}
+
+function getDatasetRowsByDatasetId($datasetId) {
+    $q = "SELECT ".Data_ID.", ".Data_String." FROM ".TABLE_Data." WHERE ".Data_DatabaseID."=".$datasetId;
+
+    return gafdb($q);
+}
+
+function updDatasetRow($datasetRowId, $rowText, $isNew = false) {
+    $params = array();
+
+    $params[Data_String] = $rowText;
+    $params[Data_isNew] = $isNew;
+
+    $q = "UPDATE ".TABLE_Data." SET ".get_update_string($params)
+        ." WHERE ".Data_ID."=".$datasetRowId;
+
+    return gefdb($q);
+}
+
+function addDatasetRow($databaseId, $rowText) {
+    $props = array();
+
+    $props[Data_DatabaseID] = $databaseId;
+    $props[Data_String] = $rowText;
+    $props[Data_isNew] = true;
 
     return itdb(TABLE_Data, $props);
 }

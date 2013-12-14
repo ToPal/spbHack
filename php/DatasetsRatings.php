@@ -104,7 +104,7 @@ function getRating($location, $csvName, $datasetId, $minDistance, $maxDistance) 
         $distance = 1000;
         foreach ($data as $v) {
             $coord = getCoordsByAddress($v['address']);
-            $current_distance = getDistance($location, $coord);
+            $current_distance = getDistanceInKm($location, $coord);
             if ($current_distance <= $minDistance) {
                 setNearest($datasetId, $current_distance);
                 return 100;

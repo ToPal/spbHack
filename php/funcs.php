@@ -39,7 +39,7 @@
         return file_get_contents($request, 'r');
     }
 
-    function getDistance($firstCoords, $secondCoords) {
+    function getDistanceInKm($firstCoords, $secondCoords) {
         return sqrt(pow(($firstCoords['latitude'] - $secondCoords['latitude']) / grad_in_km_lat, 2) +
         pow(($firstCoords['longitude'] - $secondCoords['longitude']) / grad_in_km_long, 2));
     }
