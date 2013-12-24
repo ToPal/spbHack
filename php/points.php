@@ -6,9 +6,9 @@
 
 
 
-$p['latitude'] = 55.75803;
-$p['longitude'] = 37.572437;
-$x = getRanges($p, 0.5, 3);
+//$p['latitude'] = 55.75803;
+//$p['longitude'] = 37.572437;
+//$x = getRanges($p, 0.5, 3);
 
 //Создаёт сетку для Москвы
 function create_points() {
@@ -24,25 +24,25 @@ function create_points() {
 
 function getPointByNum($num_x, $num_y) {
     $res = array();
-    $res['longitude'] = start_latitude - $num_x * delta_lat;
-    $res['latitude'] = $num_y * delta_long + start_longitude;
+    $res['latitude'] = start_latitude - $num_x * delta_lat;
+    $res['longitude'] = $num_y * delta_long + start_longitude;
 
     return $res;
 }
 
 function getPrevPointNums($point) {
-    $x = $point['longitude'];
-    $y = $point['latitude'];
+    $latitude = $point['latitude'];
+    $longitude = $point['longitude'];
 
-    if (! (is_numeric($x) && is_numeric($y)) ||
-        ($x > start_latitude) || ($x < end_latitude) ||
-        ($y < start_longitude) || ($y > end_longitude)) {
+    if (! (is_numeric($latitude) && is_numeric($longitude)) ||
+        ($latitude > start_latitude) || ($latitude < end_latitude) ||
+        ($longitude < start_longitude) || ($longitude > end_longitude)) {
         return false;
     }
 
     $res = array();
-    $res['num_x'] = floor((start_latitude - $x) / delta_lat);
-    $res['num_y'] = floor(($y - start_longitude) / delta_long);
+    $res['num_x'] = floor((start_latitude - $latitude) / delta_lat);
+    $res['num_y'] = floor(($longitude - start_longitude) / delta_long);
 
     return $res;
 }
@@ -73,6 +73,23 @@ function getNearestPoint($point) {
     if ($temp_distance < $min_distance) {
         $res['num_x'] = $num['num_x'] + 1;
         $res['num_y'] = $num['num_y'] + 1;
+    }
+
+    return $res;
+}
+
+function getNearestPoints($NumLatitude, $NumLongitude, $distance) {
+    $delta = floor($distance / km_in_delta);
+
+    $res = array();
+    for ($latitude = $NumLatitude - $delta; $latitude <= $NumLatitude + $delta; $latitude++) {
+        for ($longitude = $NumLongitude - $delta; $longitude <= $NumLongitude + $delta; $longitude++) {
+            $point = array();
+            $point[Points_NumLatitude] = $latitude;
+            $point[Points_NumLongitude] = $longitude;
+
+            $res[] = $point;
+        }
     }
 
     return $res;
@@ -121,5 +138,12 @@ function getRanges($point, $radius_1, $radius_2) {
     $res['range_1'] = $range_1;
     $res['range_2'] = $range_2;
 
+    return $res;
+}
+
+function toPoint($latitude, $longitude) {
+    $res = array();
+    $res['latitude'] = $latitude;
+    $res['longitude'] = $longitude;
     return $res;
 }

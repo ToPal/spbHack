@@ -62,10 +62,10 @@
 
 //Попытка подключения к БД
 function tryDBConnect() {
-	$res= mysql_connect(db_ipaddr, db_username, db_userpass); 
-	if (!$res) {return FALSE;}
-	$res = mysql_select_db(DB, $res);
-	if (!$res) {return FALSE;}
+	$res= mysqli_connect(db_ipaddr, db_username, db_userpass, DB);
+	if ((!$res) || mysqli_connect_errno()) {return FALSE;}
+//	$res = mysqli_select_db(DB, $res);
+//	if (!$res) {return FALSE;}
 	//@mysql_set_charset('utf8_general_ci');
 	gefdb("SET NAMES 'utf8_general_ci'");
 	
@@ -82,18 +82,21 @@ function reconnect() {
 }
 
 //Функция, обрабатывающая ВСЕ mySQL запросы в системе к нашей БД
-function my_sql_query($q) {
+function my_sql_query($query) {
 //	if (!(strpos($q, 'INSERT') === false)) {
 //		mysql_query("INSERT INTO log  (l) VALUE ('".mysql_escape_string($q)."')");}
-	return mysql_query($q);
+	//return mysql_query($q);
+    global $q;
+    $res = mysqli_query($q, $query);
+    return $res;
 }
 
 //Get Array From Data Base. Возвращает результат запроса $s и "" в случае неудачи
 function gafdb($s) { 
 	$gifdb_q = my_sql_query($s);
-	if (   !($gifdb_q)   or   !is_resource($gifdb_q)   ) {return "";}
+	if (   !($gifdb_q)  /* or   !is_resource($gifdb_q)*/   ) {return "";}
 	$res = Array();
-	while ($x = mysql_fetch_array($gifdb_q)) {
+	while ($x = mysqli_fetch_array($gifdb_q)) {
 		$res[] = $x;
 	}
 	return ($res);
@@ -102,16 +105,16 @@ function gafdb($s) {
 //Get Row From Data Base. Возвращает первую строку результата запроса $s и "" в случае неудачи
 function grfdb($s) { 
 	$gifdb_q = my_sql_query($s);
-	if (   !($gifdb_q)   or   !is_resource($gifdb_q)   ) {return "";}
-	$res = mysql_fetch_array($gifdb_q);
+	if (   !($gifdb_q)  /* or   !is_resource($gifdb_q) */  ) {return "";}
+	$res = mysqli_fetch_array($gifdb_q);
 	return ($res);
 }
 
 //Get Element From Data Base. Возвращает первый элемент первой строки результата запроса $s и "" в случае неудачи
 function gefdb($s) { 
 	$gifdb_q = my_sql_query($s);
-	if (   !($gifdb_q)   or   !is_resource($gifdb_q)   ) {return "";}
-	$res = mysql_fetch_array($gifdb_q);
+	if (   !($gifdb_q)   /*or   !is_resource($gifdb_q)*/   ) {return "";}
+	$res = mysqli_fetch_array($gifdb_q);
 	return ($res[0]);
 }
 
@@ -125,9 +128,10 @@ function geafdb($s) {
 
 //Insert to database. Возвращает id добавленной записи и 0, если вставка прошла неуспешно
 function itdb($table_name, $values) {
-    $q = "INSERT INTO ".$table_name." ".get_insert_string($values);
-    mysql_query($q);
-    if (mysql_errno()) {
+    global $q;
+    $query = "INSERT INTO ".$table_name." ".get_insert_string($values);
+    $res = mysqli_query($q, $query);
+    if (!$res) {
         return 0;
     }
     return mysql_insert_id();
@@ -220,5 +224,10 @@ function isParamsDefs($fact, $req_vars, $opt_vars = array()) {
 		}
 	}
 	return TRUE;
+}
+
+function esc($s) {
+    global $q;
+    return mysqli_real_escape_string($q, $s);
 }
 ?>

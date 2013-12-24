@@ -10,6 +10,7 @@ define("Sport_id", 6);
 define("Market_id", 7);
 
 function getDatasetName($datasetId) {
+
     switch ($datasetId) {
         case Pharmacies_id:
             return "Аптека";
@@ -130,47 +131,31 @@ function getCsvColumns($datasetId) {
                 'BPA_type');
         case Sport_id:
             return array(
-                'id',
-                'uid',
-                'code',
-                'old_id',
-                'name',
+                'ROWNUM',
                 'address',
-                'price',
-                'x',
-                'y',
-                'bti',
-                'sport_id',
-                'sport_type',
-                'sport_name',
-                'prokat',
-                'work_time',
-                'pokritie',
-                'light',
-                'free_train',
-                'cost',
-                'latitude',
-                'longitude',
-                'obj_id',
-                'obj_type',
-                'owner',
-                'okrug',
-                'rajon',
-                'tech_service',
-                'razdevalka',
-                'noize',
-                'food',
-                'toilet',
-                'wifi',
-                'bankomat',
-                'medicine',
-                'OGRN',
-                'organization',
-                'phone',
-                'site',
-                'email',
-                'status',
-                'comment');
+                'Stoimost',
+                'Prokat',
+                'Vremya_raboty',
+                'Pokrytie',
+                'Osveschenie',
+                'Besplatnye_zanyatiya',
+                'Stoimost_prokata',
+                'Vedomstvo',
+                'Okrug',
+                'Rajon',
+                'TehObsluzhivanie',
+                'Razdevalka',
+                'Zvukovoe_soprovozhdenie',
+                'Tochka_pitaniya',
+                'Tualet',
+                'Tochka_dostupaWiFi',
+                'Bankomat',
+                'MedPunkt',
+                'OGRN_ExpOrg',
+                'Name_ExpOrg',
+                'Telephone_ExpOrg',
+                'Site_ExpOrg',
+                'EMail_ExpOrg');
         case Market_id:
             return array(
                 'id',
@@ -182,4 +167,36 @@ function getCsvColumns($datasetId) {
                 'type');
         default: return false;
     }
+}
+
+$address_row = array();
+function getAddressRowByDatasetId($datasetId) {
+    global $address_row;
+
+    if (isset($address_row[$datasetId])) {
+        return $address_row[$datasetId];
+    }
+
+    $cols = getCsvColumns($datasetId);
+    foreach ($cols as $ind => $col) {
+        if ($col == "address") {
+            $address_row[$datasetId] = $ind;
+            return $ind;
+        }
+    }
+
+    return false;
+}
+
+$dataset_radius = array();
+function getDatasetRadius($datasetId) {
+    global $dataset_radius;
+
+    if (isset($dataset_radius[$datasetId])) {
+        return $dataset_radius[$datasetId];
+    }
+
+    $radius = getDatasetRadiusFromDB($datasetId);
+    $dataset_radius[$datasetId] = $radius;
+    return $radius;
 }

@@ -1,10 +1,15 @@
+<html><head><meta charset="utf-8"></head><body>
 <?php
-    include_once('php/DatasetsRatings.php');
-    include_once('php/Ratings.php');
-    include_once('php/main_funcs.php');
 
-//    $location['latitude'] = 37.735268;
-//    $location['longitude'] = 55.693351;
-//    $r = get($location);
-//var_dump($r);
-func_generateImg();
+    require_once('php/update_data.php');
+
+    try {
+        //update_all();
+//        updateDataset(6, 'datasets\Playground.csv');
+        recalculate_data();
+        echo "ok";
+    } catch (Exception $e) {
+        echo "error: ".$e->getMessage();
+    }
+
+?></body></html>

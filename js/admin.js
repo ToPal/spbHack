@@ -24,6 +24,8 @@ function getFileString(file) {
     innerString += ['Url: <input type="text" id="Url" value="', file.Url, '">'].join('');
     innerString += ['Filename: <input type="text" id="Filename" value="', file.Filename, '">'].join('');
     innerString += ['Last_update: <input type="text" id="Last_update" value="', file.Last_update, '">'].join('');
+    innerString += ['MinRange: <input type="text" id="MinRange" value="', file.MinRange, '">'].join('');
+    innerString += ['MaxRange: <input type="text" id="MaxRange" value="', file.MaxRange, '">'].join('');
 
     innerString += ['<input type="button" onclick="updFile(', file.ID, ');" value="Обновить">'].join('');
     innerString += ['<input type="button" onclick="delFile(', file.ID, ');" value="Удалить">'].join('');
@@ -79,6 +81,8 @@ function getFileInfoById(id) {
     params["Url"] = $(file_id + " > #Url").val();
     params["Filename"] = $(file_id + " > #Filename").val();
     params["Last_update"] = $(file_id + " > #Last_update").val();
+    params["MinRange"] = $(file_id + " > #MinRange").val();
+    params["MaxRange"] = $(file_id + " > #MaxRange").val();
 
     if (id != "new") {
         params["curr_id"] = $(file_id + " > #cur_id").val();

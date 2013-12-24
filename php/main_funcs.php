@@ -90,8 +90,10 @@ function func_getFilesInformation() {
                 $Url = $_POST["Url"];
                 $Filename = $_POST["Filename"];
                 $Last_update = $_POST["Last_update"];
+                $MinRange = $_POST["MinRange"];
+                $MaxRange = $_POST["MaxRange"];
 
-                addFileInformationToDB($id, $Name, $Url, $Filename, $Last_update);
+                addFileInformationToDB($id, $Name, $Url, $Filename, $Last_update, $MinRange, $MaxRange);
                 break;
             }
         case subfunc_updInfo: {
@@ -101,8 +103,10 @@ function func_getFilesInformation() {
                 $Url = $_POST["Url"];
                 $Filename = $_POST["Filename"];
                 $Last_update = $_POST["Last_update"];
+                $MinRange = $_POST["MinRange"];
+                $MaxRange = $_POST["MaxRange"];
 
-                updFileInformationFromDB($curr_id, $id, $Name, $Url, $Filename, $Last_update);
+                updFileInformationFromDB($curr_id, $id, $Name, $Url, $Filename, $Last_update, $MinRange, $MaxRange);
                 break;
         }
         case subfunc_delInfo: {

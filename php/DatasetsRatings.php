@@ -134,18 +134,43 @@ function getRatingFromDB($location, $datasetId) {
 }
 
 
-function addDataToDB($csvName, $datasetId, $minDistance, $maxDistance) {
-    $data = parseCSV($csvName, getCsvColumns($datasetId), ";");
+//function addDataToDB($csvName, $datasetId, $minDistance, $maxDistance) {
+//    $data = parseCSV($csvName, getCsvColumns($datasetId), ";");
+//
+//    foreach ($data as $v) {
+//        $coord = getCoordsByAddress($v['address']);
+//
+//        $ranges = getRanges($coord, $minDistance, $maxDistance);
+//        foreach ($ranges['range_1'] as  $point) {
+//            addDataResult($datasetId, $point['id'], $point['distance']);
+//        }
+//        foreach ($ranges['range_2'] as $point) {
+//            addDataResult($datasetId, $point['id'], $point['distance']);
+//        }
+//    }
+//}
 
-    foreach ($data as $v) {
-        $coord = getCoordsByAddress($v['address']);
+function setPointRating($pointNums, $dataset_id, $minDistance, $result_id) {
+    $point = getPointByNum($pointNums[Points_NumLatitude], $pointNums[Points_NumLongitude]);
 
-        $ranges = getRanges($coord, $minDistance, $maxDistance);
-        foreach ($ranges['range_1'] as  $point) {
-            addDataResult($datasetId, $point['id'], $point['distance']);
+    $radius = getDatasetRadius($dataset_id);
+    $data = getNearestDataRows($point['latitude'], $point['longitude'],
+        $radius[Files_MaxRange] / grad_in_km_lat, $radius[Files_MaxRange] / grad_in_km_long);
+
+    $distance = 1000;
+    $best_data_row = array();
+    foreach ($data as $current_data_row) {
+        $current_point = toPoint($current_data_row[Data_Latitude], $current_data_row[Data_Longitude]);
+
+        $current_distance = getDistanceInKm($point, $current_point);
+        if ($current_distance <= $minDistance) {
+            break;
         }
-        foreach ($ranges['range_2'] as $point) {
-            addDataResult($datasetId, $point['id'], $point['distance']);
+        if ($current_distance < $distance) {
+            $distance = $current_distance;
+            $best_data_row = $current_data_row;
         }
     }
+
+    updateDataResult($result_id, $distance, $best_data_row[Data_ID]);
 }
