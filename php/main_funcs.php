@@ -4,6 +4,7 @@ include_once('funcs.php');
 include_once('Ratings.php');
 include_once('qrs.php');
 include_once('Nearest.php');
+include_once('get_rating_img.php');
 
 function func_getRatingByAddress($address = null) {
     if (($address == null) && !isset($_POST["address"])) {
@@ -29,8 +30,19 @@ function func_getRatingByAddress($address = null) {
 function func_generateImg() {
     if (!isset($_GET['address'])) {
         throw new Exception("Incorrect address");
+    }else{
+        $address = $_GET['address'];
     }
+    if ( isset($_GET['size']) )
+        $size = $_GET['size'];
+    else
+        $size = 100;
+    $image = get_rating_image($address, $size);
+    
+    header("Content-type: image/png");
+    imagepng( $image );
 
+    /*
     $image = imagecreatetruecolor(140, 18);
     $fon = imagecolorallocate($image, 255, 255, 255);
     imagefill($image, 0, 0, $fon);
@@ -40,6 +52,8 @@ function func_generateImg() {
 
     header('Content-type: image/png');
     imagepng($image);
+    */
+
 }
 
 function func_getPoints() {
